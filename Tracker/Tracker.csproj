@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net472</TargetFramework>
+    <!--<Nullable>enable</Nullable>-->
+    <UseWPF>true</UseWPF>
+    <StartupObject>Tracker.App</StartupObject>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="tracker.ico" />
+  </ItemGroup>
+	<ItemGroup>
+		<TrimmerRootAssembly Include="System.Collections" />
+		<TrimmerRootAssembly Include="System.Runtime" />
+		<TrimmerRootAssembly Include="System.Runtime.Extensions" />
+		<TrimmerRootAssembly Include="System.Runtime.InteropServices" />
+		<TrimmerRootAssembly Include="System.Runtime.CompilerServices.VisualC" />
+	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
+    <PackageReference Include="Interop.Econnect.dll" Version="2.0.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="SVCStyleLibrary">
+      <HintPath>..\..\..\..\AZURE\SVC\Common\SVCStyleLibrary\bin\Debug\SVCStyleLibrary.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="tracker.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+</Project>

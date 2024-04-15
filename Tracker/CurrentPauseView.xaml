@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Tracker.CurrentPauseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Tracker"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border  Height="auto" CornerRadius="5" BorderThickness="2" Background="{DynamicResource ActivityHighlightBrush}" >
+        <Border Margin="2" Padding="2" CornerRadius="3" BorderThickness="0" Background="{DynamicResource BaseBrush }">
+            <Grid>
+                <Image Margin="10,5" Height="20" HorizontalAlignment="Left">
+                    <Image.Source>
+                        <DrawingImage>
+                            <DrawingImage.Drawing>
+                                <GeometryDrawing Brush="{DynamicResource ActivityHighlightBrush}" Geometry="M2,21H20V19H2M20,8H18V5H20M20,3H4V13A4,4 0 0,0 8,17H14A4,4 0 0,0 18,13V10H20A2,2 0 0,0 22,8V5C22,3.89 21.1,3 20,3Z" />
+                            </DrawingImage.Drawing>
+                        </DrawingImage>
+                    </Image.Source>
+                </Image>
+                <TextBlock Text="Paused" VerticalAlignment="Center" Margin="60,5" FontSize="20" FontWeight="DemiBold" Foreground="{DynamicResource ActivityHighlightBrush}"></TextBlock>
+            </Grid>
+        </Border>
+    </Border>
+</UserControl>

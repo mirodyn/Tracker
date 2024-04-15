@@ -1,0 +1,367 @@
+﻿<Window x:Class="Tracker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Tracker"
+        xmlns:dd="urn:gong-wpf-dragdrop"
+        mc:Ignorable="d"
+        Title="Tracker" Height="1000" Width="450" WindowStyle="ToolWindow" ResizeMode="NoResize" Style="{DynamicResource SVCWindow}" Icon="/tracker.ico" Closed="Window_Closed" >
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"></BooleanToVisibilityConverter>
+    </Window.Resources>
+    <Grid>
+        <Grid Background="{DynamicResource BaseBrush}" x:Name="MainGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Padding="5"  Height="auto" Background="{DynamicResource ContrastDownBrush}" CornerRadius="10" Margin="10,0,10,5" >
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" >
+                    <Button x:Name="DonwloadBtn" ToolTip="Download tasks from QI" Margin="5,3">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                            <Style.Setters>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Border Padding="1">
+                                                <Image Height="12">
+                                                    <Image.Source>
+                                                        <DrawingImage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                                                            <DrawingImage.Drawing>
+                                                                    <GeometryDrawing Brush="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}" Geometry="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+                                                            </DrawingImage.Drawing>
+                                                        </DrawingImage>
+                                                    </Image.Source>
+                                                </Image>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Foreground" Value="{DynamicResource HighContrastUpBrush}"></Setter>
+                            </Style.Setters>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True" >
+                                    <Trigger.Setters>
+                                        <Setter Property="Foreground" Value="{DynamicResource ActivityHighlightBrush}"></Setter>
+                                    </Trigger.Setters>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button x:Name="UploadBtn" ToolTip="Upload new tasks and tracked times to QI" Margin="5,3">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Setters>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate>
+                                                <Border Padding="1">
+                                                    <Image Height="12">
+                                                        <Image.Source>
+                                                            <DrawingImage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                                                                <DrawingImage.Drawing>
+                                                                    <GeometryDrawing Brush="{Binding RelativeSource={RelativeSource AncestorType=Button},Path=Foreground}"  Geometry="M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z" />
+                                                                </DrawingImage.Drawing>
+                                                            </DrawingImage>
+                                                        </Image.Source>
+                                                    </Image>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="Foreground" Value="{DynamicResource HighContrastUpBrush}"></Setter>
+                                </Style.Setters>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True" >
+                                        <Trigger.Setters>
+                                            <Setter Property="Foreground" Value="{DynamicResource ActivityHighlightBrush}"></Setter>
+                                        </Trigger.Setters>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button x:Name="SyncBtn" Height="12" Click="SyncBtn_Click" Style="{DynamicResource SVCRefreshButton}" Width="12" Content="Editor" Margin="5,3"></Button>
+                    <!--<Button x:Name="EditorBtn" Height="12" Click="EditorBtn_Click" Width="100" Content="Editor" Margin="10"></Button>-->
+                    <Button x:Name="TrackedListBtn" Height="12" Click="TrackedListBtn_Click"  Width="12" Style="{DynamicResource SVCLogLinesButton}" Margin="5,3"></Button>
+                    <Button x:Name="SettingBtn" Height="15" Width="15" ToolTip="Settings" Click="SettingBtn_Click" >
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Setters>
+                                    <Setter Property="Background" Value="{DynamicResource HighContrastUpBrush}" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate  TargetType="Button" >
+                                                <Rectangle>
+                                                    <Rectangle.Fill>
+                                                        <VisualBrush Stretch="Uniform" AlignmentX="center" AlignmentY="Center" >
+                                                            <VisualBrush.Visual>
+                                                                <Path Data="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"  Fill="{TemplateBinding Background }" />
+                                                            </VisualBrush.Visual>
+                                                        </VisualBrush>
+                                                    </Rectangle.Fill>
+                                                </Rectangle>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style.Setters>
+                                <Style.Triggers>
+                                  <Trigger Property="IsMouseOver" Value="True">
+                                        <Trigger.Setters>
+                                            <Setter Property="Background" Value="{DynamicResource ActivityHighlightBrush}"></Setter>
+                                        </Trigger.Setters>
+                                  </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="1" Padding="5"  Height="auto" Background="{DynamicResource ContrastDownBrush}" CornerRadius="10" Margin="10,0,10,5" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Border Width="auto" HorizontalAlignment="Center" CornerRadius="0,0,10,10" Background="{DynamicResource ActivityHighlightBrush}"  Margin="0,-5" Grid.Row="1">
+                        <Border.Style>
+                            <Style TargetType="Border">
+                                <Style.Setters>
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                </Style.Setters>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ActiveTask.Count}" Value="1">
+                                        <Setter Property="Visibility" Value="Visible" ></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Border.Style>
+                        <Grid Width="auto" Margin="2" >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Margin="5,0" x:Name="TimerTb" Grid.Column="0" FontWeight="Bold" Foreground="{DynamicResource HighContrastDownBrush }" Text="00:00:00"></TextBlock>
+                            <Button Grid.Column="2" Click="Button_Click" Content="clear" Margin="2,2,5,2" Width="8" Height="8" ToolTip="Clear current task without replacement" Background="{DynamicResource HighContrastDownBrush}" Style="{DynamicResource RemoveButton}"></Button>
+                        </Grid>
+                    </Border>
+                    <Border Panel.ZIndex="0" Grid.Row="0" Background="Transparent" BorderBrush="{DynamicResource ContrastUpBrush}" Height="40" Margin="5,2" CornerRadius="10" BorderThickness="2">
+                        <Grid Width="auto" HorizontalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Margin="5">
+                                <Image.Source>
+                                    <DrawingImage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                                        <DrawingImage.Drawing>
+                                            <GeometryDrawing Brush="{DynamicResource ContrastUpBrush }" Geometry="M13 15.6C13.3 15.8 13.7 15.8 14 15.6L19 12.7V13C19.7 13 20.4 13.1 21 13.4V11.6L22 11C22.5 10.7 22.6 10.1 22.4 9.6L20.9 7.1C20.8 6.9 20.7 6.7 20.5 6.6L12.6 2.2C12.4 2.1 12.2 2 12 2S11.6 2.1 11.4 2.2L3.6 6.6C3.4 6.7 3.2 6.8 3.1 7L1.6 9.6C1.3 10.1 1.5 10.7 2 11C2.3 11.2 2.7 11.2 3 11V16.5C3 16.9 3.2 17.2 3.5 17.4L11.4 21.8C11.6 21.9 11.8 22 12 22S12.4 21.9 12.6 21.8L13.5 21.3C13.2 20.7 13.1 20 13 19.3M11 19.3L5 15.9V9.2L11 12.6V19.3M20.1 9.7L13.8 13.3L13.2 12.3L19.5 8.7L20.1 9.7M12 10.8V4.2L18 7.5L12 10.8M20 15V18H23V20H20V23H18V20H15V18H18V15H20Z" />
+                                        </DrawingImage.Drawing>
+                                    </DrawingImage>
+                                </Image.Source>
+
+                            </Image>
+                            <TextBlock Grid.Column="1" Margin="10,0" FontWeight="DemiBold" Foreground="{DynamicResource ContrastUpBrush }" VerticalAlignment="center" FontSize="15" Text="Drag task here to start"></TextBlock>
+                        </Grid>
+                    </Border>
+                    <ItemsControl Panel.ZIndex="1" Grid.Row="0" Background="transparent" MinHeight="40" ItemsSource="{Binding ActiveTask}" Height="auto" Margin="2" 
+                                dd:DragDrop.IsDropTarget="True" 
+                                dd:DragDrop.DropHandler="{Binding}"
+                                Drop="ItemsControl_Drop">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel></StackPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type local:Task}">
+                                <local:CurrentTaskView></local:CurrentTaskView>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:Pause}">
+                                <local:CurrentPauseView></local:CurrentPauseView>
+                            </DataTemplate>
+                            <DataTemplate DataType="{x:Type local:NewTask}">
+                                <local:CurrentNewTaskView></local:CurrentNewTaskView>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+
+                    </ItemsControl>
+                </Grid>
+            </Border>
+            <Border Grid.Row="2" Height="auto" Background="{DynamicResource ContrastDownBrush}" CornerRadius="10" Margin="10,0,10,5">
+                <ItemsControl ItemsSource="{Binding SpecialTasks}" dd:DragDrop.IsDragSource="True" dd:DragDrop.DragHandler="{Binding}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"></StackPanel>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.Resources>
+                        <DataTemplate DataType="{x:Type local:Unspecified}">
+                            <local:UnspecifiedItemView Margin="2"></local:UnspecifiedItemView>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type local:Pause}">
+                            <local:PauseItemView Margin="2"></local:PauseItemView>
+                        </DataTemplate>
+                    </ItemsControl.Resources>
+                </ItemsControl>
+            </Border>
+            <Border Grid.Row="3" Height="25" Background="{DynamicResource ContrastDownBrush}" Margin="10,5" CornerRadius="10">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Foreground="{DynamicResource HighContrastUpBrush }" Grid.Column="0" Margin="10,2,0,2" FontWeight="DemiBold" VerticalAlignment="Center" Text="Filter:"></TextBlock>
+                    <TextBox Foreground="{DynamicResource FullContrastUpBrush }" Text="{Binding Path=FilterString,UpdateSourceTrigger=PropertyChanged }" Grid.Column="1" VerticalAlignment="Center" Margin="3,2" BorderThickness="0" Background="{DynamicResource ContrastDownBrush}"></TextBox>
+                </Grid>
+            </Border>
+            <Border Grid.Row="4" Background="{DynamicResource ContrastUpBrush}" CornerRadius="10" Margin="10,5">
+                <ItemsControl Margin="1" ItemsSource="{Binding Path=FilteredTasks, Mode=TwoWay}" dd:DragDrop.IsDragSource="True" dd:DragDrop.DragHandler="{Binding}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsVirtualizing="True" VirtualizationMode="Recycling" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <!--<ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:TaskItemView Margin="2"></local:TaskItemView>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>-->
+                    <ItemsControl.Resources>
+                        <DataTemplate DataType="{x:Type local:Task}">
+                            <local:TaskItemView Margin="2"></local:TaskItemView>
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type local:NewTask}">
+                            <local:NewTaskItemView Margin="2"></local:NewTaskItemView>
+                        </DataTemplate>
+                    </ItemsControl.Resources>
+                    <ItemsControl.Template>
+                        <ControlTemplate TargetType="ItemsControl">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}">
+                                <ScrollViewer CanContentScroll="True" VerticalScrollBarVisibility="Auto" Padding="{TemplateBinding Padding}" Focusable="False">
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </Border>
+                        </ControlTemplate>
+                    </ItemsControl.Template>
+                </ItemsControl>
+            </Border>
+            <Border Background="{DynamicResource BaseBrush}" DataContext="{Binding Bin}" BorderThickness="3" BorderBrush="{DynamicResource RedButtonHighlightBrush}"  dd:DragDrop.IsDropTarget="True" dd:DragDrop.DropHandler="{Binding}" Visibility="{Binding Converter={StaticResource BoolToVisibility},Path=DraggedTaskCanBeRemoved}" Grid.Row="5" Margin="10,0" Height="75" CornerRadius="10" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Image Margin="50,0,0,0" Height="30" Grid.Column="0">
+                        <Image.Source>
+                            <DrawingImage xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                                <DrawingImage.Drawing>
+                                    <GeometryDrawing Brush="{DynamicResource RedButtonHighlightBrush}" Geometry="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z" />
+                                </DrawingImage.Drawing>
+                            </DrawingImage>
+                        </Image.Source>
+                    </Image>
+                    <TextBlock HorizontalAlignment="Center" Foreground="{DynamicResource RedButtonHighlightBrush}" Grid.Column="1" VerticalAlignment="Center" FontWeight="DemiBold" FontSize="20" Text="Drop here to delete"></TextBlock>
+                </Grid>
+            </Border>
+            <Border  Margin="10,0" Grid.Row="6" CornerRadius="4" HorizontalAlignment="Stretch" Background="{DynamicResource HighContrastDownBrush}" >
+                <Grid>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Style.Setters>
+                                <Setter Property="ToolTip" Value="QI server cannot be reached"></Setter>
+                            </Style.Setters>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding QiReachable}" Value="True">
+                                    <Setter Property="ToolTip" Value="QI server reachable"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Canvas Margin="10,0,0,0" Grid.Column="0" Width="6" Height="5" VerticalAlignment="Center" >
+                        <Ellipse Width="5" Height="5"  >
+                            <Ellipse.Style>
+                                <Style TargetType="Ellipse">
+                                    <Style.Setters>
+                                        <Setter Property="Fill" Value="Red"></Setter>
+                                    </Style.Setters>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding QiReachable}" Value="True">
+                                            <Setter Property="Fill" Value="{DynamicResource GreenButtonHighlightBrush}"></Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Ellipse.Style>
+                        </Ellipse>
+                    </Canvas>
+                    <TextBlock Grid.Column="1"  Margin="2,0" FontSize="11" FontWeight="Bold" Foreground="{DynamicResource HighContrastUpBrush}"  Text="QI"></TextBlock>
+                </Grid>
+            </Border>
+        </Grid>
+            <!--settings-->
+        <Grid x:Name="SettingsGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0" Padding="5"  Height="auto" Background="{DynamicResource ContrastDownBrush}" CornerRadius="10" Margin="10,0,10,5" >
+                <StackPanel Orientation="Horizontal">
+                    <Button Height="15" Width="15" Content="Save Configuration" Style="{DynamicResource SVCSaveButton}" x:Name="SaveSettingsBtn" Click="SaveSettingsBtn_Click"></Button>
+                </StackPanel>
+            </Border>
+            <Border  CornerRadius="20" Margin="10,0" Grid.Row="1"  HorizontalAlignment="Stretch" Background="{DynamicResource ContrastDownBrush}" Visibility="Visible" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Border Grid.Row="2" CornerRadius="10" Height="auto" Background="{DynamicResource BaseBrush }" Margin="5" >
+                        <Grid HorizontalAlignment="Stretch" Margin="2,2,2,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                                <RowDefinition Height="auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Foreground="{DynamicResource FullContrastUpBrush }" Margin="10,2,2,2" FontSize="15" FontWeight="DemiBold" Text="QI:"></TextBlock>
+                            <Separator Grid.Row="1" Grid.ColumnSpan="2" Margin="10,2,10,10" Background="{DynamicResource HighContrastUpBrush}" ></Separator>
+                            <TextBlock Grid.Row="2" FontSize="15" Foreground="{DynamicResource HighContrastUpBrush }" Margin="10,2" FontWeight="DemiBold" Text="Full Name:"></TextBlock>
+                            <TextBox Text="{Binding Configuration.QiConfig.FullName, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged }" Foreground="{DynamicResource FullContrastUpBrush}" BorderBrush="{DynamicResource ContrastUpBrush }" Background="{DynamicResource HighContrastDownBrush }" Margin="2,2,20,2" Grid.Row="2" Grid.Column="1"></TextBox>
+                            <TextBlock Grid.Row="3" FontSize="15" Foreground="{DynamicResource HighContrastUpBrush }" Margin="10,2" FontWeight="DemiBold" Text="Server:"></TextBlock>
+                            <TextBox Text="{Binding Configuration.QiConfig.Server, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged }" Foreground="{DynamicResource FullContrastUpBrush}" BorderBrush="{DynamicResource ContrastUpBrush }" Background="{DynamicResource HighContrastDownBrush }" Margin="2,2,20,2" Grid.Row="3" Grid.Column="1"></TextBox>
+                            <TextBlock Grid.Row="4" FontSize="15" Foreground="{DynamicResource HighContrastUpBrush }" Margin="10,2" FontWeight="DemiBold" Text="Port:"></TextBlock>
+                            <TextBox Text="{Binding Configuration.QiConfig.Port, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged }" Foreground="{DynamicResource FullContrastUpBrush}" BorderBrush="{DynamicResource ContrastUpBrush }" Background="{DynamicResource HighContrastDownBrush }"  Margin="2,2,20,2" Grid.Row="4" Grid.Column="1"></TextBox>
+                            <TextBlock Grid.Row="5" FontSize="15" Foreground="{DynamicResource HighContrastUpBrush }" Margin="10,2" FontWeight="DemiBold" Text="User:"></TextBlock>
+                            <TextBox Text="{Binding Configuration.QiConfig.User, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged }" Foreground="{DynamicResource FullContrastUpBrush}" BorderBrush="{DynamicResource ContrastUpBrush }" Background="{DynamicResource HighContrastDownBrush }"  Margin="2,2,20,2" Grid.Row="5" Grid.Column="1"></TextBox>
+                            <TextBlock Grid.Row="6" FontSize="15" Foreground="{DynamicResource HighContrastUpBrush }" Margin="10,2" FontWeight="DemiBold" Text="Pasword:"></TextBlock>
+                            <PasswordBox x:Name="PassBox" PasswordChanged="PasswordBox_PasswordChanged" Foreground="{DynamicResource FullContrastUpBrush}" BorderBrush="{DynamicResource ContrastUpBrush }" Background="{DynamicResource HighContrastDownBrush }" Margin="2,2,20,2" Grid.Row="6" Grid.Column="1"></PasswordBox>
+                        </Grid>
+                    </Border>
+
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Grid>
+</Window>
